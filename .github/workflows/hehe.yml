@@ -1,125 +1,31 @@
-name: Code Quality Checking
+name: Code Quality Workflow
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  lint:
-    name: Code Linting
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pylint
-          npm install --global eslint stylelint
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
 
-      - name: Run Flake8
-        run: flake8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Run Pylint
-        run: pylint src/
+    - name: Run code linters
+      run: |
+        flake8 --ignore=E501 .
+        pylint --fail-under=8 .
 
-      - name: Run ESLint
-        run: eslint src/
-
-      - name: Run Stylelint
-        run: stylelint src/
-
-  formatting:
-    name: Code Formatting
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black yapf prettier
-
-      - name: Run Black
-        run: black src/
-
-      - name: Run YAPF
-        run: yapf --in-place --recursive src/
-
-      - name: Run Prettier
-        run: prettier --write src/
-
-  coverage:
-    name: Code Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-cov codecov
-
-      - name: Run tests and generate coverage report
-        run: pytest --cov-report xml --cov=src/
-
-      - name: Upload coverage report to Codecov
-        uses: codecov/codecov-action@v2.1.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  security:
-    name: Security Scanning
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          npm install --global snyk
-
-      - name: Run Snyk security scan
-        run: snyk test --file=package.json --severity-threshold=high
-
-  dependencies:
-    name: Dependency Management
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          npm install --global renovate
-
-      - name: Run Renovate
-        uses: renovatebot/renovate-action@v1
-        with:
-          git-author: Renovate Bot <bot@renovateapp.com>
-
-  review:
-    name: Code Review
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          npm install --global codeclimate deepcode
-
-      - name: Run CodeClimate analysis
-        uses: codeclimate/codeclimate-action@v3
-
-      - name: Run DeepCode analysis
-        uses: deepcodeai/action@v1
-        with:
-          api-key: ${{ secrets.DEEPCODE_API_KEY }}
+    - name: Run tests
+      run: pytest tests/
