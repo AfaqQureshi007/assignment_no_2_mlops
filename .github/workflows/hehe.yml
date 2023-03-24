@@ -28,4 +28,4 @@ jobs:
         pylint --fail-under=8 .
 
     - name: Run tests
-      run: pytest tests/
+      run: pytest tests
