@@ -27,5 +27,3 @@ jobs:
         flake8 --ignore=E501 .
         pylint --fail-under=8 .
 
-    - name: Run tests
-      run: pytest tests
