@@ -1,0 +1,9 @@
+In this assignment, we used Flask, a lightweight web framework, to create a web application that integrates with Python. Flask allowed us to create a simple yet powerful backend API that our frontend code could communicate with. We used Python to train a machine learning model that makes predictions based on input data. The model makes predictions at regular intervals and can also take input from the user to make specific predictions.
+
+To enhance user experience, we used AJAX (Asynchronous JavaScript and XML) to make asynchronous requests to the server without having to refresh the web page every time. This allowed the user to see real-time predictions from the model and live updates of prices without having to wait for a page reload.
+
+The frontend of our website was built using HTML, CSS, and JavaScript. We used modern web development techniques and libraries like to create a responsive and user-friendly design.
+
+To ensure that our application is always up-to-date, we used Jenkins, an open-source automation server, to automatically rebuild our repository every time a new commit is made. We also used Docker to create a containerized environment for our application, making it easier to deploy and run on different platforms.
+
+Overall, this project allowed us to integrate various technologies to create a web application that can make accurate predictions and provide real-time updates to the user.
